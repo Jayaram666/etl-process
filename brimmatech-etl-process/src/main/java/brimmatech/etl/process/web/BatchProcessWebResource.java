@@ -1,8 +1,9 @@
 package brimmatech.etl.process.web;
 
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -18,8 +19,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import brimmatech.etl.process.domain.EmployeeEntity;
-import brimmatech.etl.process.repository.EmployeeRepository;
+
 
 @RestController
 public class BatchProcessWebResource {
@@ -29,10 +29,10 @@ public class BatchProcessWebResource {
 	@Autowired
 	private Job job;
 	@Autowired
-	private EmployeeRepository employeeRepository;
 	Logger logger = LoggerFactory.getLogger(BatchProcessWebResource.class);
 
-	@GetMapping("/load")
+
+	@GetMapping( "/load")
 	public BatchStatus load() throws JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
 		logger.info("Job has been started ");
@@ -42,12 +42,6 @@ public class BatchProcessWebResource {
 		JobExecution jobExecution = jobLauncher.run(job, jobParameters);
 		logger.info("Job execution status -{}   ", jobExecution.getStatus());
 		return jobExecution.getStatus();
-	}
-
-	
-	@GetMapping("/employees")
-	public List<EmployeeEntity> listEmployees() {
-		return employeeRepository.findAll();
 	}
 
 }
