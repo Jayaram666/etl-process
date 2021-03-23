@@ -1,6 +1,8 @@
 package com.brimmatech.dto;
 
+
 import java.time.LocalDate;
+
 
 public class EmployeeDTO {
 
@@ -17,6 +19,7 @@ public class EmployeeDTO {
 	private String country;
 
 	private String company;
+
 
 	public Integer getEmployeeId() {
 		return employeeId;
@@ -74,8 +77,8 @@ public class EmployeeDTO {
 		this.company = company;
 	}
 
-	public EmployeeDTO(Integer employeeId, String firstName, String lasstName, String email, LocalDate birthDate,
-			String country, String company) {
+	public EmployeeDTO (Integer employeeId , String firstName , String lasstName , String email , LocalDate birthDate ,
+			String country , String company) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
@@ -86,7 +89,7 @@ public class EmployeeDTO {
 		this.company = company;
 	}
 
-	public EmployeeDTO() {
+	public EmployeeDTO () {
 	}
 
 }

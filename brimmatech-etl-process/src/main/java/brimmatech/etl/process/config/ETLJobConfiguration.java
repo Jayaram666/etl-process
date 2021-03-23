@@ -1,5 +1,6 @@
 package brimmatech.etl.process.config;
 
+
 import org.modelmapper.ModelMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,16 +16,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import brimmatech.etl.process.domain.EmployeeEntity;
 
+
 @Configuration
 @Component
 public class ETLJobConfiguration {
-	
+
 	@Bean
 	public Job job(JobBuilderFactory jobbuilderFactory, StepBuilderFactory stepBuilderFactory,
 			ItemReader<EmployeeEntity> itemreader, ItemWriter<EmployeeEntity> itemWriter,
 			ItemProcessor<EmployeeEntity, EmployeeEntity> processor) {
 
-		Step step = stepBuilderFactory.get("ETL_DB_LOAD")
+		Step step = stepBuilderFactory
+				.get("ETL_DB_LOAD")
 				.<EmployeeEntity, EmployeeEntity>chunk(100)
 				.reader(itemreader)
 				.processor(processor)
@@ -36,11 +39,10 @@ public class ETLJobConfiguration {
 				.incrementer(new RunIdIncrementer())
 				.start(step)
 				.build();
-		
+
 		return job;
 	}
 
-	
 
 	@Bean
 	public ModelMapper modelMapper() {

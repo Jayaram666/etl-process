@@ -1,5 +1,6 @@
 package brimmatech.etl.process.domain;
 
+
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,35 +8,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
-@Table(name = "employee")
+@Table( name = "employee")
 public class EmployeeEntity {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "employee_id")
+	@Column( name = "employee_id")
 	private Integer employeeId;
 
-	@Column(name = "firstName")
+	@Column( name = "firstName")
 	private String firstName;
 
-	@Column(name = "last_name")
+	@Column( name = "last_name")
 	private String lasstName;
 
-	@Column(name = "email")
+	@Column( name = "email")
 	private String email;
 
-	@Column(name = "birth_date")
+	@Column( name = "birth_date")
 	private LocalDate birthDate;
 
-	@Column(name = "country")
+	@Column( name = "country")
 	private String country;
 
-	@Column(name = "company")
+	@Column( name = "company")
 	private String company;
 
-	@Column(name = "is_processed")
+	@Column( name = "is_processed")
 	private Boolean isProcessed;
+
 
 	public Integer getEmployeeId() {
 		return employeeId;
