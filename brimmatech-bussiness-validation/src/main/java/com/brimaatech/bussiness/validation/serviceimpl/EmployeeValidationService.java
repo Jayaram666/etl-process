@@ -41,14 +41,18 @@ public class EmployeeValidationService implements IEmployeeValidationService {
 			LocalDate today = LocalDate.now();
 			Period period = Period.between(employeeDTO.getBirthDate(), today);
 			int age = period.getYears();
-			String ageValidationMsg = age >= 16 && age <= 60 ? "" : ageValidationMessage;
-			employeeValidationDTO.setValidationMessage(ageValidationMsg);
+			String validationMsg = age >= 16 && age <= 60 ? null : ageValidationMessage;
+			employeeValidationDTO.setValidation(validation);
+			employeeValidationDTO.setValidationMessage(validationMsg);
 			employeeValidationList.add(employeeValidationDTO);
 			bussinessValidationMessagesList.setEmployeeValidationDTO(employeeValidationList);
+			if (validationMsg != null) {
+				return bussinessValidationMessagesList;
+			}
 			logger.info("validating the employee age is completed , the validation message is  - {} ",
-					ageValidationMsg);
+					validationMsg);
 		}
-		return bussinessValidationMessagesList;
+		return new BussinessValidationDTO();
 
 	}
 

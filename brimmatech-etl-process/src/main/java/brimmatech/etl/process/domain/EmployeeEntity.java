@@ -3,10 +3,15 @@ package brimmatech.etl.process.domain;
 
 import java.time.LocalDate;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import brimmatech.etl.process.config.EmployeeValidationJsonNodeConverter;
 
 
 @Entity
@@ -38,6 +43,13 @@ public class EmployeeEntity {
 
 	@Column( name = "is_processed")
 	private Boolean isProcessed;
+
+	@Column( name = "validations")
+	@Convert( converter = EmployeeValidationJsonNodeConverter.class)
+	private JsonNode employeeValidations;
+
+	@Column( name = "record_status")
+	private String recordStatus;
 
 
 	public Integer getEmployeeId() {
@@ -103,5 +115,25 @@ public class EmployeeEntity {
 	public void setIsProcessed(Boolean isProcessed) {
 		this.isProcessed = isProcessed;
 	}
+
+
+	public JsonNode getEmployeeValidations() {
+		return employeeValidations;
+	}
+
+
+	public void setEmployeeValidations(JsonNode employeeValidations) {
+		this.employeeValidations = employeeValidations;
+	}
+
+	public String getRecordStatus() {
+		return recordStatus;
+	}
+
+
+	public void setRecordStatus(String recordStatus) {
+		this.recordStatus = recordStatus;
+	}
+
 
 }
