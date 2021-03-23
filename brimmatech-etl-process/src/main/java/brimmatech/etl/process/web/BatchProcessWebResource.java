@@ -28,7 +28,7 @@ public class BatchProcessWebResource {
 	private JobLauncher jobLauncher;
 	@Autowired
 	private Job job;
-	@Autowired
+
 	Logger logger = LoggerFactory.getLogger(BatchProcessWebResource.class);
 
 
