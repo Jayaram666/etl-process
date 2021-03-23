@@ -55,12 +55,13 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 				if (bussinessValidationDTO.getEmployeeValidationDTO() != null
 						&& bussinessValidationDTO.getEmployeeValidationDTO().size() >= 1) {
 					employee.setRecordStatus(erroneousRecord);
+					String json = mapper.writeValueAsString(bussinessValidationDTO);
+					JsonNode employeeValidations = mapper.readTree(json);
+					employee.setEmployeeValidations(employeeValidations);
 				}
 			}
 
-			String json = mapper.writeValueAsString(bussinessValidationDTO);
-			JsonNode employeeValidations = mapper.readTree(json);
-			employee.setEmployeeValidations(employeeValidations);
+
 			logger.info("The validations for the  - {} record {} ", employee.getFirstName(),
 					bussinessValidationDTO.toString());
 		}
@@ -68,8 +69,8 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 	}
 
 	private EmployeeDTO convertToDto(EmployeeEntity employeeEntity) {
-		EmployeeDTO employeeDTO = modelMapper.map(employeeEntity, EmployeeDTO.class);
-		return employeeDTO;
+		return modelMapper.map(employeeEntity, EmployeeDTO.class);
+
 	}
 
 }
