@@ -1,9 +1,11 @@
 package com.brimmatech.dto;
 
+
 public class EmployeeValidationDTO {
-	
+
 	private String validation;
 	private String validationMessage;
+
 
 	public String getValidationMessage() {
 		return validationMessage;

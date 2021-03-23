@@ -1,10 +1,12 @@
 package brimmatech.etl.process.domain;
 
+
 public class EmployeeValidationDTO {
 
 	private Integer validationId;
 	private String validation;
 	private String validationMessage;
+
 
 	public String getValidationMessage() {
 		return validationMessage;
