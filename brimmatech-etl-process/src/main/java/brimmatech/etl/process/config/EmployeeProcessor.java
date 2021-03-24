@@ -2,8 +2,6 @@ package brimmatech.etl.process.config;
 
 
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,12 +14,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import brimmatech.etl.process.client.IValidationClientService;
 import brimmatech.etl.process.domain.EmployeeEntity;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Component
+@Slf4j 
 public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, EmployeeEntity> {
 
-	Logger logger = LoggerFactory.getLogger(EmployeeProcessor.class);
 
 
 	@Autowired
@@ -38,7 +37,7 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 
 	@Override
 	public EmployeeEntity process(EmployeeEntity employee) throws Exception {
-		logger.info("Transforming the data in processor ");
+		log.info("Transforming the data in processor ");
 		employee.setIsProcessed(true);
 		employee.setRecordStatus(validRecord);
 
@@ -46,7 +45,7 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 			EmployeeDTO emp = convertToDto(employee);
 			BussinessValidationDTO bussinessValidationDTO = validationClientService.validateEmployeeAge(emp);
 			employee = bindValidationJsonWithEmployee(employee, bussinessValidationDTO);
-			logger.info("The validations for the  - {} record {} ", employee.getFirstName(),
+			log.info("The validations for the  - {} record {} ", employee.getFirstName(),
 					bussinessValidationDTO.toString());
 		}
 		return employee;
