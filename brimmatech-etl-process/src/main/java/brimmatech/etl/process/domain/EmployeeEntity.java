@@ -2,6 +2,7 @@ package brimmatech.etl.process.domain;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -9,6 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -51,6 +57,9 @@ public class EmployeeEntity {
 	@Column( name = "is_processed")
 	private Boolean isProcessed;
 
+	@Column( name = "is_age_validated")
+	private Boolean isAgeValidated;
+
 	@Column( name = "validations")
 	@Convert( converter = EmployeeValidationJsonNodeConverter.class)
 	private JsonNode employeeValidations;
@@ -58,5 +67,11 @@ public class EmployeeEntity {
 	@Column( name = "record_status")
 	private String recordStatus;
 
+	@CreationTimestamp
+	@Column( name = "created_at")
+	private LocalDateTime createdAt;
 
+	@UpdateTimestamp
+	@Column( name = "updated_at")
+	private LocalDateTime updatedAt;
 }
