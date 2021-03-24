@@ -20,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import brimmatech.etl.process.config.EmployeeValidationJsonNodeConverter;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RestController
 public class BatchProcessWebResource {
 
@@ -29,18 +33,16 @@ public class BatchProcessWebResource {
 	@Autowired
 	private Job job;
 
-	Logger logger = LoggerFactory.getLogger(BatchProcessWebResource.class);
-
 
 	@GetMapping( "/employee-db-load")
 	public BatchStatus load() throws JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-		logger.info("Job has been started ");
+		log.info("Job has been started ");
 		Map<String, JobParameter> parameters = new HashMap<>();
 		parameters.put("time", new JobParameter(System.currentTimeMillis()));
 		JobParameters jobParameters = new JobParameters(parameters);
 		JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-		logger.info("Job execution status -{}   ", jobExecution.getStatus());
+		log.info("Job execution status -{}   ", jobExecution.getStatus());
 		return jobExecution.getStatus();
 	}
 

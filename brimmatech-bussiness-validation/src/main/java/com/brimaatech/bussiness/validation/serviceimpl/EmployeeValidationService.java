@@ -16,10 +16,12 @@ import com.brimaatech.bussiness.validation.webresource.BussinessValidationResour
 import com.brimmatech.dto.BussinessValidationDTO;
 import com.brimmatech.dto.EmployeeDTO;
 import com.brimmatech.dto.EmployeeValidationDTO;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @PropertySource( "classpath:messages.properties")
+@Slf4j
 public class EmployeeValidationService implements IEmployeeValidationService {
 
 	@Value( "${employee.validation.message}")
@@ -37,7 +39,7 @@ public class EmployeeValidationService implements IEmployeeValidationService {
 		List<EmployeeValidationDTO> employeeValidationList = new ArrayList<>();
 		EmployeeValidationDTO employeeValidationDTO = new EmployeeValidationDTO();
 		if (null != employeeDTO.getBirthDate()) {
-			logger.info("validaing the employee age for the employee - {} ", employeeDTO.getFirstName());
+			log.info("validaing the employee age for the employee - {} ", employeeDTO.getFirstName());
 			LocalDate today = LocalDate.now();
 			Period period = Period.between(employeeDTO.getBirthDate(), today);
 			int age = period.getYears();
@@ -49,8 +51,7 @@ public class EmployeeValidationService implements IEmployeeValidationService {
 			if (validationMsg != null) {
 				return bussinessValidationMessagesList;
 			}
-			logger.info("validating the employee age is completed , the validation message is  - {} ",
-					validationMsg);
+			log.info("validating the employee age is completed , the validation message is  - {} ", validationMsg);
 		}
 		return new BussinessValidationDTO();
 

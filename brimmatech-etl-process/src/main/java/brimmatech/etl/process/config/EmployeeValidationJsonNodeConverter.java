@@ -4,19 +4,19 @@ package brimmatech.etl.process.config;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Converter
+@Slf4j
 public class EmployeeValidationJsonNodeConverter implements AttributeConverter<JsonNode, String> {
 
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeValidationJsonNodeConverter.class);
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -24,7 +24,7 @@ public class EmployeeValidationJsonNodeConverter implements AttributeConverter<J
 	@Override
 	public String convertToDatabaseColumn(JsonNode jsonNode) {
 		if (jsonNode == null) {
-			logger.warn("jsonNode input is null, returning null");
+			log.warn("jsonNode input is null, returning null");
 			return null;
 		}
 
@@ -38,7 +38,7 @@ public class EmployeeValidationJsonNodeConverter implements AttributeConverter<J
 
 
 		if (null == jsonNodeString) {
-			logger.warn("jsonNodeString input is empty, returning null");
+			log.warn("jsonNodeString input is empty, returning null");
 			return null;
 		}
 
@@ -46,10 +46,10 @@ public class EmployeeValidationJsonNodeConverter implements AttributeConverter<J
 			return mapper.readTree(jsonNodeString);
 		}
 		catch (JsonProcessingException e) {
-			logger.error("Error parsing jsonNodeString", e);
+			log.error("Error parsing jsonNodeString", e);
 		}
 		catch (Exception e) {
-			logger.error("Error parsing jsonNodeString", e);
+			log.error("Error parsing jsonNodeString", e);
 		}
 		return null;
 	}
