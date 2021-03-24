@@ -36,12 +36,13 @@ public class EmployeeValidationJsonNodeConverter implements AttributeConverter<J
 	@Override
 	public JsonNode convertToEntityAttribute(String jsonNodeString) {
 
+
+		if (null == jsonNodeString) {
+			logger.warn("jsonNodeString input is empty, returning null");
+			return null;
+		}
+
 		try {
-			System.out.println("The json string is " + jsonNodeString);
-			if (null == jsonNodeString | jsonNodeString.isEmpty()) {
-				logger.warn("jsonNodeString input is empty, returning null");
-				return null;
-			}
 			return mapper.readTree(jsonNodeString);
 		}
 		catch (JsonProcessingException e) {

@@ -6,15 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+
 import com.brimmatech.dto.BussinessValidationDTO;
 import com.brimmatech.dto.EmployeeDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import brimmatech.etl.process.client.IValidationClientService;
 import brimmatech.etl.process.domain.EmployeeEntity;
 
 
@@ -23,11 +23,6 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 
 	Logger logger = LoggerFactory.getLogger(EmployeeProcessor.class);
 
-	@Autowired
-	private RestTemplate restTemplate;
-
-	@Value( "${validation.service.url}")
-	private String validationServiceURL;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -37,6 +32,8 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 	private String erroneousRecord = "ER";
 
 	private String validRecord = "VR";
+	@Autowired
+	private IValidationClientService validationClientService;
 
 
 	@Override
@@ -47,21 +44,8 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 
 		if (null != employee.getBirthDate()) {
 			EmployeeDTO emp = convertToDto(employee);
-			HttpEntity<EmployeeDTO> request = new HttpEntity<>(emp);
-			BussinessValidationDTO bussinessValidationDTO = restTemplate.postForObject(validationServiceURL, request,
-					BussinessValidationDTO.class);
-
-			if (bussinessValidationDTO != null) {
-				if (bussinessValidationDTO.getEmployeeValidationDTO() != null
-						&& bussinessValidationDTO.getEmployeeValidationDTO().size() >= 1) {
-					employee.setRecordStatus(erroneousRecord);
-					String json = mapper.writeValueAsString(bussinessValidationDTO);
-					JsonNode employeeValidations = mapper.readTree(json);
-					employee.setEmployeeValidations(employeeValidations);
-				}
-			}
-
-
+			BussinessValidationDTO bussinessValidationDTO = validationClientService.validateEmployeeAge(emp);
+			employee = bindValidationJsonWithEmployee(employee, bussinessValidationDTO);
 			logger.info("The validations for the  - {} record {} ", employee.getFirstName(),
 					bussinessValidationDTO.toString());
 		}
@@ -73,4 +57,23 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 
 	}
 
+	private EmployeeEntity bindValidationJsonWithEmployee(EmployeeEntity employee,
+			BussinessValidationDTO bussinessValidationDTO) {
+		if (bussinessValidationDTO != null) {
+			if (bussinessValidationDTO.getEmployeeValidationDTO() != null
+					&& bussinessValidationDTO.getEmployeeValidationDTO().size() >= 1) {
+				employee.setRecordStatus(erroneousRecord);
+				String json;
+				try {
+					json = mapper.writeValueAsString(bussinessValidationDTO);
+					JsonNode employeeValidations = mapper.readTree(json);
+					employee.setEmployeeValidations(employeeValidations);
+				}
+				catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return employee;
+	}
 }
