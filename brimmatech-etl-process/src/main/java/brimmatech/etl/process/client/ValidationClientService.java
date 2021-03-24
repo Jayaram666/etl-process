@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.brimmatech.dto.BussinessValidationDTO;
 import com.brimmatech.dto.EmployeeDTO;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 
 @Service
@@ -22,9 +23,14 @@ public class ValidationClientService implements IValidationClientService {
 
 
 	@Override
+	@HystrixCommand( fallbackMethod = "validateEmployeeAgeFallBack")
 	public BussinessValidationDTO validateEmployeeAge(EmployeeDTO employee) {
 		HttpEntity<EmployeeDTO> request = new HttpEntity<>(employee);
 		return restTemplate.postForObject(validationServiceURL, request, BussinessValidationDTO.class);
+	}
+
+	public BussinessValidationDTO validateEmployeeAgeFallBack(EmployeeDTO employee) {
+		return new BussinessValidationDTO();
 	}
 
 }
