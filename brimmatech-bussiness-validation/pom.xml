@@ -9,7 +9,7 @@
 		<version>2.4.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.brimaatech.bussiness.validation</groupId>
+	<groupId>com.brimaatech</groupId>
 	<artifactId>brimmatech-bussiness-validation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>brimmatech-bussiness-validation</name>
@@ -33,7 +33,7 @@
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>brimmatech-etl-process</groupId>
+			<groupId>com.brimmatech</groupId>
 			<artifactId>brimmatech-common-libraries</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
