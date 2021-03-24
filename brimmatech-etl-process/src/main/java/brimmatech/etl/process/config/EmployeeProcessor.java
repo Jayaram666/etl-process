@@ -18,9 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Component
-@Slf4j 
+@Slf4j
 public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, EmployeeEntity> {
-
 
 
 	@Autowired
@@ -40,10 +39,10 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 		log.info("Transforming the data in processor ");
 		employee.setIsProcessed(true);
 		employee.setRecordStatus(validRecord);
-
 		if (null != employee.getBirthDate()) {
 			EmployeeDTO emp = convertToDto(employee);
 			BussinessValidationDTO bussinessValidationDTO = validationClientService.validateEmployeeAge(emp);
+			System.out.println("The bussiness validation response is " + bussinessValidationDTO);
 			employee = bindValidationJsonWithEmployee(employee, bussinessValidationDTO);
 			log.info("The validations for the  - {} record {} ", employee.getFirstName(),
 					bussinessValidationDTO.toString());
@@ -66,11 +65,14 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 				try {
 					json = mapper.writeValueAsString(bussinessValidationDTO);
 					JsonNode employeeValidations = mapper.readTree(json);
+					System.out.println("The employee validations are " + employee);
 					employee.setEmployeeValidations(employeeValidations);
 				}
 				catch (JsonProcessingException e) {
 					e.printStackTrace();
 				}
+			} else {
+				employee.setEmployeeValidations(null);
 			}
 		}
 		return employee;
