@@ -32,7 +32,7 @@ public class BatchProcessWebResource {
 	Logger logger = LoggerFactory.getLogger(BatchProcessWebResource.class);
 
 
-	@GetMapping( "/load")
+	@GetMapping( "/employee-db-load")
 	public BatchStatus load() throws JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
 		logger.info("Job has been started ");
