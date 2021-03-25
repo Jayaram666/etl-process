@@ -1,10 +1,8 @@
 package com.brimmatech.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @NoArgsConstructor
@@ -13,6 +11,5 @@ public class EmployeeValidationDTO {
 
 	private String validation;
 	private String validationMessage;
-
 
 }

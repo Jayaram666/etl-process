@@ -1,12 +1,10 @@
 package com.brimmatech.dto;
 
-
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @NoArgsConstructor
@@ -26,6 +24,5 @@ public class EmployeeDTO {
 	private String country;
 
 	private String company;
-
 
 }

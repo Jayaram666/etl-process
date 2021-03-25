@@ -1,6 +1,5 @@
 package brimmatech.etl.process.web;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestController
 public class BatchProcessWebResource {
@@ -30,8 +28,7 @@ public class BatchProcessWebResource {
 	@Autowired
 	private Job job;
 
-
-	@GetMapping( "/employee-db-load")
+	@GetMapping("/employee-db-load")
 	public BatchStatus load() throws JobExecutionAlreadyRunningException, JobRestartException,
 			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
 		log.info("Job has been started ");

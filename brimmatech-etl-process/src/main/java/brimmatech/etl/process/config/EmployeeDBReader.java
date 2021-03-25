@@ -1,6 +1,5 @@
 package brimmatech.etl.process.config;
 
-
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.batch.item.database.JpaPagingItemReader;
@@ -11,16 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import brimmatech.etl.process.domain.EmployeeEntity;
 
-
 @Configuration
 public class EmployeeDBReader {
 
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
 
-	@Value( "${chunk.size}")
+	@Value("${chunk.size}")
 	private Integer chunkSize;
-
 
 	@Bean
 	public JpaPagingItemReader<EmployeeEntity> itemReader() {

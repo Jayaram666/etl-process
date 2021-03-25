@@ -1,6 +1,5 @@
 package com.brimaatech.bussiness.validation.serviceimpl;
 
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -18,20 +17,18 @@ import com.brimmatech.dto.EmployeeDTO;
 import com.brimmatech.dto.EmployeeValidationDTO;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Service
-@PropertySource( "classpath:messages.properties")
+@PropertySource("classpath:messages.properties")
 @Slf4j
 public class EmployeeValidationService implements IEmployeeValidationService {
 
-	@Value( "${employee.validation.message}")
+	@Value("${employee.validation.message}")
 	private String ageValidationMessage;
 
-	@Value( "${employee.validation.age}")
+	@Value("${employee.validation.age}")
 	private String validation;
 
 	Logger logger = LoggerFactory.getLogger(BussinessValidationResource.class);
-
 
 	@Override
 	public BussinessValidationDTO validateAge(@RequestBody EmployeeDTO employeeDTO) {

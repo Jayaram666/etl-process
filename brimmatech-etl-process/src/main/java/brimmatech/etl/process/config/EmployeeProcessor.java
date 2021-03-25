@@ -1,9 +1,13 @@
 package brimmatech.etl.process.config;
 
-
 import org.modelmapper.ModelMapper;
+import org.springframework.batch.core.annotation.OnProcessError;
+import org.springframework.batch.core.annotation.OnReadError;
+import org.springframework.batch.core.annotation.OnSkipInWrite;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.brimmatech.dto.BussinessValidationDTO;
@@ -16,11 +20,9 @@ import brimmatech.etl.process.client.IValidationClientService;
 import brimmatech.etl.process.domain.EmployeeEntity;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Component
 @Slf4j
 public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, EmployeeEntity> {
-
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -33,21 +35,50 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 	@Autowired
 	private IValidationClientService validationClientService;
 
+	@Autowired
+	Validator<EmployeeEntity> validator;
+	@Autowired
+	private BeanValidator<EmployeeEntity> beanValidator;
 
 	@Override
 	public EmployeeEntity process(EmployeeEntity employee) throws Exception {
+		beanValidator.validate(employee);
 		log.info("Transforming the data in processor ");
 		employee.setIsProcessed(true);
 		employee.setRecordStatus(validRecord);
+		log.info("Validating the employee age ..... ");
 		if (null != employee.getBirthDate()) {
 			EmployeeDTO emp = convertToDto(employee);
-			BussinessValidationDTO bussinessValidationDTO = validationClientService.validateEmployeeAge(emp);
-			System.out.println("The bussiness validation response is " + bussinessValidationDTO);
-			employee = bindValidationJsonWithEmployee(employee, bussinessValidationDTO);
-			log.info("The validations for the  - {} record {} ", employee.getFirstName(),
-					bussinessValidationDTO.toString());
+			ResponseEntity<BussinessValidationDTO> bussinessValidationDTOResponse = validationClientService
+					.validateEmployeeAge(emp);
+			BussinessValidationDTO bussinessValidationDTO = bussinessValidationDTOResponse.getBody();
+			if (bussinessValidationDTOResponse.getStatusCodeValue() == 200) {
+				employee = bindValidationJsonWithEmployee(employee, bussinessValidationDTO);
+				employee.setIsAgeValidated(true);
+			} else {
+				employee.setIsAgeValidated(false);
+				employee.setEmployeeValidations(null);
+			}
+			log.info("The validations for the  - {} record {} ", employee.getFirstName(), bussinessValidationDTO);
 		}
 		return employee;
+	}
+
+	@OnProcessError
+	void onProcessError(EmployeeEntity item, Exception e) {
+		log.error("Exception occurred in input validation at the {} th item. [message:{}]", item.getCount(),
+				e.getMessage());
+	}
+
+	@OnReadError
+	public void houstonWeHaveAProblemOnRead(Exception e) {
+		log.error("Exception occurred in input validation at the {} th item. [message:{}]");
+	}
+
+	@OnSkipInWrite
+	public void houstonWeHaveAProblemOnWrite(EmployeeEntity item, Exception e) {
+		log.error("Exception occurred in input validation at the {} th item. [message:{}]", item.getCount(),
+				e.getMessage());
 	}
 
 	private EmployeeDTO convertToDto(EmployeeEntity employeeEntity) {
@@ -67,8 +98,7 @@ public class EmployeeProcessor implements ItemProcessor<EmployeeEntity, Employee
 					JsonNode employeeValidations = mapper.readTree(json);
 					System.out.println("The employee validations are " + employee);
 					employee.setEmployeeValidations(employeeValidations);
-				}
-				catch (JsonProcessingException e) {
+				} catch (JsonProcessingException e) {
 					e.printStackTrace();
 				}
 			} else {
