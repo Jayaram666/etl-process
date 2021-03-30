@@ -1,5 +1,6 @@
 package com.brimmatech.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BussinessValidationDTO {
 
-	private List<EmployeeValidationDTO> employeeValidationDTO;
+	private List<EmployeeValidationDTO> employeeValidationDTO=new ArrayList<EmployeeValidationDTO>();
 
 }
