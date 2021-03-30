@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,19 +39,23 @@ public class EmployeeEntity implements ItemCountAware {
 
 	@Column(name = "firstName")
 	@Size(max = 15, message = "first name size is exceeded")
+	@NotEmpty(message = "The firstName must not be blank.")
 	private String firstName;
 
 	@Column(name = "last_name")
-	@NotEmpty(message = "The above field must not be blank.")
+	@NotEmpty(message = "The lasstName field must not be blank.")
 	private String lasstName;
 
 	@Column(name = "email")
+	@NotEmpty(message = "The email field must not be blank.")
+	@Pattern(regexp = "[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
 	private String email;
 
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
 
 	@Column(name = "country")
+	@NotEmpty(message = "The country field must not be blank.")
 	private String country;
 
 	@Column(name = "company")
@@ -81,4 +86,27 @@ public class EmployeeEntity implements ItemCountAware {
 	public void setItemCount(int count) {
 		this.count = count;
 	}
+
+	public EmployeeEntity(int count, Integer employeeId,
+			@Size(max = 15, message = "first name size is exceeded") String firstName, String lasstName,
+			@Pattern(regexp = "[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}") String email, LocalDate birthDate,
+			String country, String company, Boolean isProcessed, Boolean isAgeValidated, String recordStatus,
+			LocalDateTime createdAt, LocalDateTime updatedAt) {
+		super();
+		this.count = count;
+		this.employeeId = employeeId;
+		this.firstName = firstName;
+		this.lasstName = lasstName;
+		this.email = email;
+		this.birthDate = birthDate;
+		this.country = country;
+		this.company = company;
+		this.isProcessed = isProcessed;
+		this.isAgeValidated = isAgeValidated;
+		this.recordStatus = recordStatus;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+	}
+	
+	
 }
